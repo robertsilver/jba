@@ -54,6 +54,10 @@ namespace jba.Services
             }
         }
 
+        /// <summary>
+        /// Read all of the header items.
+        /// </summary>
+        /// <param name="line"></param>
         private void ProcessHeaderItems(string line)
         {
             if (line.Contains("[Long="))
@@ -83,6 +87,10 @@ namespace jba.Services
             }
         }
 
+        /// <summary>
+        /// Read the grid ref data which is always before the block of precipitation data.
+        /// </summary>
+        /// <param name="line"></param>
         private void ProcessGridRef(string line)
         {
             if (line.Contains("Grid-ref="))
@@ -94,6 +102,10 @@ namespace jba.Services
             }
         }
 
+        /// <summary>
+        /// Read the precipitation data
+        /// </summary>
+        /// <param name="values"></param>
         private void ProcessPrecipitationData(List<int> values)
         {
             if (values != null)
