@@ -33,6 +33,62 @@ namespace JBAUtils
             }
         }
 
+        public DataTable CreateTableForList<T>(List<T> data, dynamic columnNames)
+        {
+            DataTable table = new DataTable();
+
+            Dictionary<string, Type> typeDictionary = GetTypeDictionary<T>(columnNames);
+
+            foreach (string columnName in typeDictionary.Select(t => t.Key))
+            {
+                Type type = typeDictionary[columnName];
+                Type safeType = Nullable.GetUnderlyingType(type) ?? type;
+
+                if (typeof(Enum).IsAssignableFrom(safeType))
+                {
+                    safeType = typeof(int);
+                }
+
+                DataColumn column = new DataColumn(columnName, safeType);
+
+                if (safeType == type)
+                {
+                    column.AllowDBNull = true;
+                }
+
+                table.Columns.Add(column);
+            }
+
+            return table;
+        }
+
+        public DataTable PopulateTable<T>(DataTable table, List<T> data, dynamic columnNames)
+        {
+            IEnumerable<PropertyMap> p = GetPropertyMaps<T>(columnNames);
+            List<PropertyMap> propertyMaps = p.ToList();
+
+            if (data != null)
+            {
+                foreach (T item in data)
+                {
+                    DataRow row = table.NewRow();
+
+                    propertyMaps.ForEach(propertyMap => propertyMap(ref row, item));
+
+                    table.Rows.Add(row);
+                }
+            }
+
+            return table;
+        }
+
+        public DataTable CreateAndPopulateTableForList<T>(List<T> data, dynamic columnNames)
+        {
+            DataTable table = CreateTableForList<T>(data, columnNames);
+
+            return PopulateTable(table, data, columnNames);
+        }
+
         private IEnumerable<ColumnMap> GetColumnMaps(List<string> columns, Type type)
         {
             if (columns.Count == 1 && !type.IsClass)
@@ -159,6 +215,26 @@ namespace JBAUtils
                 .Where(p => p.CanWrite)
                 .Select(propertyInfo => GetColumnMap(propertyInfo, compositeColumns, $"{prefix}{property.Name}."))
                 .Where(columnMap => columnMap != null);
+        }
+
+        private Dictionary<string, Type> GetTypeDictionary<T>(dynamic columnNames)
+        {
+            Dictionary<string, Type> typeDictionary = new Dictionary<string, Type>();
+
+            foreach (PropertyInfo property in columnNames.GetType().GetProperties())
+            {
+                typeDictionary.Add(property.Name, GetTypeForColumn(property.GetValue(columnNames), typeof(T)));
+            }
+
+            return typeDictionary;
+        }
+
+        private static IEnumerable<PropertyMap> GetPropertyMaps<T>(dynamic columnNames)
+        {
+            foreach (PropertyInfo property in columnNames.GetType().GetProperties())
+            {
+                yield return GetPropertyMap(property.Name, property.GetValue(columnNames), new List<PropertyInfo>(), type: typeof(T));
+            }
         }
     }
 }

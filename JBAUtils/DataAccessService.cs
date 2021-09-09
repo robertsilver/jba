@@ -32,7 +32,7 @@ namespace JBAUtils
                     {
                         sqlCommand.Parameters.Add(parameter);
                     }
-
+                    
                     sqlCommand.Connection.Open();
 
                     using (SqlDataReader dataReader = sqlCommand.ExecuteReader())
@@ -50,6 +50,11 @@ namespace JBAUtils
             }
 
             return success ? _dataConversionService.DataTableToEnumerable<T>(dataTable) : new List<T>();
+        }
+
+        public DataTable CreateAndPopulateTableForList<T>(List<T> data, dynamic columnNames)
+        {
+            return _dataConversionService.CreateAndPopulateTableForList<T>(data, columnNames);
         }
 
         private IEnumerable<SqlParameter> ParseParameters(dynamic parameters)
