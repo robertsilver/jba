@@ -11,9 +11,10 @@ namespace jba.Controllers
         public ActionResult Index()
         {
             var path = Path.Combine(Server.MapPath("~/UploadedDataFiles"),
-                                                   "OriginalDataFile.pre");
+                                    "OriginalDataFile.pre");
 
             JBAReader precipitationFile = new JBAReader(path);
+            precipitationFile.RetrieveData();
             return View();
         }
 
@@ -24,6 +25,7 @@ namespace jba.Controllers
             if (!string.IsNullOrEmpty(path))
             {
                 JBAReader precipitationFile = new JBAReader(path);
+                precipitationFile.RetrieveData();
             }
 
             return View();
