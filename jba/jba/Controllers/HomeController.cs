@@ -1,5 +1,7 @@
-﻿using jba.Services;
+﻿using jba.Models;
+using jba.Services;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Web;
 using System.Web.Mvc;
@@ -11,24 +13,34 @@ namespace jba.Controllers
         public ActionResult Index()
         {
             var path = Path.Combine(Server.MapPath("~/UploadedDataFiles"),
-                                    "OriginalDataFile.pre");
+                                    "cru-ts-2-10.1991-2000-cutdown.pre");
 
             JBAReader precipitationFile = new JBAReader(path);
             precipitationFile.RetrieveData();
-            return View();
+
+            JBAStore store = new JBAStore();
+            store.StoreData(precipitationFile.RainData);
+
+            return View(precipitationFile.RainData);
         }
 
         [HttpPost]
         public ActionResult Index(HttpPostedFileBase file)
         {
+            List<PrecipitationData> model = new List<PrecipitationData>();
+
             var path = RetrievePath(file);
             if (!string.IsNullOrEmpty(path))
             {
                 JBAReader precipitationFile = new JBAReader(path);
                 precipitationFile.RetrieveData();
+
+                JBAStore store = new JBAStore();
+                store.StoreData(precipitationFile.RainData);
+                model = precipitationFile.RainData;
             }
 
-            return View();
+            return View(model);
         }
 
         public ActionResult About()
