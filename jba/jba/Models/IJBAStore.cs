@@ -1,7 +1,9 @@
-﻿namespace jba.Models
+﻿using System.Collections.Generic;
+
+namespace jba.Models
 {
     public interface IJBAStore
     {
-        void StoreData();
+        void StoreData(List<PrecipitationData> data);
     }
 }
