@@ -1,1 +1,4 @@
-# jba
+# JBA
+- As can be seen in the solution, the code reads the header but doesn't store this data in the database.  However, as the solution demonstrates, it would be very easy to create the table and then pass the data to the database for storage.
+- When writing data to the table, it doesn't check if that data has already been written.  Obviously in the real world it must check but this requirement isn't part of the test.
+- I don't feel the requested table has been normalised properly (as shown here: https://jbasoftware.com/careers/code-challenge); the same X & Y reference is inserted for every row, when really this should be placed into another table and then the Id from that table should be written into the table.
