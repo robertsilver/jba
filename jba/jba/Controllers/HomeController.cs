@@ -1,4 +1,5 @@
-﻿using System;
+﻿using jba.Services;
+using System;
 using System.IO;
 using System.Web;
 using System.Web.Mvc;
@@ -9,6 +10,10 @@ namespace jba.Controllers
     {
         public ActionResult Index()
         {
+            var path = Path.Combine(Server.MapPath("~/UploadedDataFiles"),
+                                                   "OriginalDataFile.pre");
+
+            JBAReader precipitationFile = new JBAReader(path);
             return View();
         }
 
@@ -17,7 +22,9 @@ namespace jba.Controllers
         {
             var path = RetrievePath(file);
             if (!string.IsNullOrEmpty(path))
-                ;
+            {
+                JBAReader precipitationFile = new JBAReader(path);
+            }
 
             return View();
         }
@@ -53,8 +60,11 @@ namespace jba.Controllers
                 {
                     try
                     {
+                        var now = DateTime.Now;
+
                         path = Path.Combine(Server.MapPath("~/UploadedDataFiles"),
-                                                   $"{DateTime.Now.Year}-{DateTime.Now.Month.ToString("00")}-{DateTime.Now.Day.ToString("00")}_{Path.GetFileName(file.FileName)}");
+                                                   $"{now.Year}-{now.Month.ToString("00")}-{now.Day.ToString("00")}-" +
+                                                   $"{now.Hour.ToString("00")}-{now.Minute.ToString("00")}-{now.Second.ToString("00")}_{Path.GetFileName(file.FileName)}");
                         file.SaveAs(path);
                         ViewBag.Message = "File uploaded successfully";
                     }
