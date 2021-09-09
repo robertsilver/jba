@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using System.Web;
 using System.Web.Mvc;
 
@@ -10,6 +9,16 @@ namespace jba.Controllers
     {
         public ActionResult Index()
         {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Index(HttpPostedFileBase file)
+        {
+            var path = RetrievePath(file);
+            if (!string.IsNullOrEmpty(path))
+                ;
+
             return View();
         }
 
@@ -25,6 +34,42 @@ namespace jba.Controllers
             ViewBag.Message = "Your contact page.";
 
             return View();
+        }
+
+        private bool IsFileExtensionValid(string filename)
+        {
+            var dotPosn = filename.LastIndexOf(".");
+
+            return dotPosn >= 0 && filename.Substring(dotPosn + 1) == "pre";
+        }
+
+        private string RetrievePath(HttpPostedFileBase file)
+        {
+            string path = string.Empty;
+
+            if (file != null && file.ContentLength > 0)
+            {
+                if (IsFileExtensionValid(file.FileName))
+                {
+                    try
+                    {
+                        path = Path.Combine(Server.MapPath("~/UploadedDataFiles"),
+                                                   $"{DateTime.Now.Year}-{DateTime.Now.Month.ToString("00")}-{DateTime.Now.Day.ToString("00")}_{Path.GetFileName(file.FileName)}");
+                        file.SaveAs(path);
+                        ViewBag.Message = "File uploaded successfully";
+                    }
+                    catch (Exception ex)
+                    {
+                        ViewBag.Message = "ERROR:" + ex.Message.ToString();
+                    }
+                }
+                else
+                    ViewBag.Message = "ERROR: You have not uploaded a file with the extension of .pre.  Please try again.";
+            }
+            else
+                ViewBag.Message = "You have not specified a file.";
+
+            return path;
         }
     }
 }
