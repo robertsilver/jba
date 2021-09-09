@@ -187,7 +187,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\Data.cs" />
+    <Compile Include="Models\PrecipitationData.cs" />
     <Compile Include="Models\FileValues.cs" />
     <Compile Include="Models\IJBAStore.cs" />
     <Compile Include="Models\ProcessPreFile.cs" />
@@ -213,11 +213,8 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="mongocrypt.dll" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="libmongocrypt.so" />
-    <Content Include="libmongocrypt.dylib" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
