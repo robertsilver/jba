@@ -15,7 +15,8 @@ namespace jba.Services
         private double[] _gridRef = new double[2];
         private bool _headerValuesRead = false;
         private double _currentlyProcessingYear = 0;
-        private List<(double gridX, double gridY, DateTime date, int value)> _precipitationData = new List<(double gridX, double gridY, DateTime date, int value)>();
+
+        public List<PrecipitationData> RainData = new List<PrecipitationData>();
 
         private ProcessFile _fileProcessing;
 
@@ -37,6 +38,9 @@ namespace jba.Services
         public void RetrieveData()
         {
             if (string.IsNullOrEmpty(_filename))
+                return;
+
+            if (!File.Exists(_filename))
                 return;
 
             var allLines = File.ReadLines(_filename);
@@ -113,7 +117,14 @@ namespace jba.Services
                 int month = 1;
                 foreach (var v in values)
                 {
-                    _precipitationData.Add((_gridRef[0], _gridRef[1], new DateTime(Convert.ToInt32(_currentlyProcessingYear), month, 01), v));
+                    PrecipitationData temp = new PrecipitationData
+                    {
+                        Date = new DateTime(Convert.ToInt32(_currentlyProcessingYear), month, 01),
+                        Value = v,
+                        Xref = _gridRef[0],
+                        Yref = _gridRef[1]
+                    };
+                    RainData.Add(temp);
                     month++;
                 }
 
