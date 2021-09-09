@@ -12,6 +12,9 @@ namespace jba.Services
             Regex regex = new Regex(@"^\d$");
             List<int> precipitation = null;
 
+            if (string.IsNullOrEmpty(line))
+                return precipitation;
+
             if (!regex.IsMatch(line.TrimStart().Substring(0, 1)))
                 return precipitation;
 
