@@ -1,7 +1,7 @@
 # JBA
 - All code is in the development branch, NOT main.
 - As can be seen in the solution, the code reads the header but doesn't store this data in the database.  However, as the solution demonstrates, it would be very easy to create the table and then pass the data to the database for storage.
-- When writing data to the table, it doesn't check if that data has already been written.  Obviously in the real world it must check but this requirement isn't part of the test.
-- I don't feel the requested table has been normalised properly (as shown here: https://jbasoftware.com/careers/code-challenge); the same X & Y reference is inserted for every row, when really this should be placed into another table and then the Id from that table should be written into the table.
-- The test file contains 627,000 records so I took the view that only a thousand records should be displayed to the user.  In a real world application we would show about 100 and then offer the user different pages to view.
+- When writing data to the table, it doesn't check if that data has already been written.  Obviously in the real world it must check but this requirement isn't part of the coding challenge.
+- I don't feel the requested table has been normalised properly (as shown here: https://jbasoftware.com/careers/code-challenge); the same X & Y reference is inserted for every row, when really this should be placed into another table and then the Id from that table written into the table.
+- The test file contains ~627,000 records so I took the view that only a thousand records should be displayed to the user.  In a real world application we would show about 100 and then offer the user different pages to view.
 - The scripts are in a folder called "SQL Scripts".  It's left to the user to create a DB called "JAB" with a user called "jab" and a password of "jab123".  Once created the scripts can be run to create the necessary SPs, table and user defined table.
